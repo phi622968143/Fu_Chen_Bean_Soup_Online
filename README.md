@@ -1,6 +1,7 @@
 ## Mind Map
 
-![image](https://github.com/phi622968143/Fu_Chen_Bean_Soup_Online/tree/main/assets/mindmap.png)
+![image](https://github.com/phi622968143/Fu_Chen_Bean_Soup_Online/blob/3ac37eb519235c424259277ceda233d46475226f/assets/mindmap.png)
+
 
 ## UI/UX Design
 
