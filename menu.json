@@ -1,0 +1,74 @@
+{
+  "categories": [
+    {
+      "id": "green_bean",
+      "name": "綠豆薏仁系列",
+      "toppings": ["粉角"],
+      "items": [
+        { "id": "gb001", "name": "綠豆薏仁", "price": 50 },
+        { "id": "gb002", "name": "薏仁湯", "price": 45 },
+        { "id": "gb003", "name": "綠豆湯", "price": 45 }
+      ]
+    },
+    {
+      "id": "tofu",
+      "name": "豆花系列",
+      "toppings": ["粉角"],
+      "items": [
+        { "id": "tf001", "name": "豆花", "price": 50 },
+        { "id": "tf002", "name": "花生豆花", "price": 55 },
+        { "id": "tf003", "name": "薑汁豆花", "price": 55 }
+      ]
+    },
+    {
+      "id": "bottle",
+      "name": "瓶裝系列",
+      "toppings": [],
+      "items": [
+        { "id": "bt001", "name": "瓶裝綠豆薏仁", "price": 60 },
+        { "id": "bt002", "name": "瓶裝杏仁茶", "price": 60 },
+        { "id": "bt003", "name": "瓶裝豆漿", "price": 55 }
+      ]
+    },
+    {
+      "id": "almond",
+      "name": "杏仁系列",
+      "toppings": ["粉角"],
+      "items": [
+        { "id": "al001", "name": "杏仁茶", "price": 50 },
+        { "id": "al002", "name": "杏仁豆腐", "price": 55 },
+        { "id": "al003", "name": "杏仁凍", "price": 55 }
+      ]
+    },
+    {
+      "id": "cold_drink",
+      "name": "冷飲系列",
+      "toppings": ["粉角"],
+      "items": [
+        { "id": "cd001", "name": "冰綠豆薏仁", "price": 50 },
+        { "id": "cd002", "name": "冰杏仁茶", "price": 50 },
+        { "id": "cd003", "name": "冰豆漿", "price": 45 }
+      ]
+    },
+    {
+      "id": "ice",
+      "name": "冰品系列",
+      "toppings": ["粉角", "布丁"],
+      "items": [
+        { "id": "ic001", "name": "剉冰", "price": 55 },
+        { "id": "ic002", "name": "豆花冰", "price": 60 },
+        { "id": "ic003", "name": "杏仁冰", "price": 60 }
+      ]
+    },
+    {
+      "id": "hot_drink",
+      "name": "熱飲系列",
+      "toppings": ["花生", "湯圓", "粉角"],
+      "items": [
+        { "id": "hd001", "name": "熱綠豆薏仁", "price": 50 },
+        { "id": "hd002", "name": "熱杏仁茶", "price": 50 },
+        { "id": "hd003", "name": "熱豆漿", "price": 45 }
+      ]
+    }
+  ]
+}
