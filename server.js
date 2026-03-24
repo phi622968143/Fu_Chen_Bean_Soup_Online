@@ -40,7 +40,16 @@ app.post('/orders', (req, res) => {
 app.get('/back', (req, res) => {
   res.json(orders);
 });
-// app.delete('/finished_orders');
+
+app.delete('/finished_orders/:id',(req, res)=>{
+        const id = parseInt(req.params.id);           // 從網址拿 id
+        const index = orders.findIndex(o => o.id === id);  // 找到那筆的位置
+        if (index === -1) {
+                return res.status(404).json({ message: '訂單不存在' });
+        }
+        orders.splice(index,1);
+        res.status(200).json({ message: '訂單已完成' });
+});
 
 app.listen(3000, () => {           // 啟動伺服器
   console.log('Server running');
