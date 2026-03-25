@@ -1,47 +1,78 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight, X, Phone } from "lucide-react";
+import OrderDetailCard from "../../components/ui/OrderDetail";
 
 interface OrderItem {
   name: string;
+  size: string;
+  topping: string;
   qty: number;
-  price: number;
+  subtotal: number;
 }
 
 interface Order {
   id: string;
+  customerName: string;
   phone: string;
-  time: string;
+  datetime: string;
+  note: string;
   total: number;
+  items: OrderItem[];
   completed: boolean;
 }
 
 const INITIAL_ORDERS: Order[] = [
   {
     id: "038",
+    customerName: "伊地知虹夏",
     phone: "0988122707",
-    time: "22:08",
+    datetime: "2026/09/20 22:08",
+    note: "",
     total: 515,
+    items: [
+      { name: "綠豆湯", size: "小", topping: "無", qty: 6, subtotal: 210 },
+      { name: "薏仁湯", size: "大", topping: "無", qty: 4, subtotal: 220 },
+      { name: "洛神花(瓶)", size: "大", topping: "無", qty: 1, subtotal: 75 },
+    ],
     completed: false,
   },
   {
     id: "039",
+    customerName: "平澤憂",
     phone: "0918041005",
-    time: "22:11",
+    datetime: "2026/09/20 22:11",
+    note: "",
     total: 230,
+    items: [
+      { name: "薏仁湯", size: "小", topping: "粉角", qty: 4, subtotal: 160 },
+      { name: "綠豆汁", size: "大", topping: "無", qty: 2, subtotal: 70 },
+    ],
     completed: false,
   },
   {
     id: "040",
+    customerName: "千早愛音",
     phone: "0920430515",
-    time: "22:16",
+    datetime: "2026/09/20 22:16",
+    note: "",
     total: 830,
+    items: [
+      { name: "杏仁茶", size: "小", topping: "無", qty: 6, subtotal: 240 },
+      { name: "三色豆花", size: "大", topping: "無", qty: 7, subtotal: 420 },
+      { name: "雪花冰", size: "小", topping: "布丁", qty: 1, subtotal: 70 },
+    ],
     completed: false,
   },
   {
     id: "041",
+    customerName: "後藤一里",
     phone: "0966242830",
-    time: "22:30",
+    datetime: "2026/09/20 22:30",
+    note: "",
     total: 60,
+    items: [
+      { name: "三色豆花", size: "大", topping: "無", qty: 1, subtotal: 60 },
+    ],
     completed: false,
   },
 ];
@@ -179,6 +210,7 @@ function OrderRow({
   onToggle: (e: React.MouseEvent) => void;
   onClick: () => void;
 }) {
+  const displayTime = order.datetime.slice(11);
   return (
     <button
       onClick={onClick}
@@ -191,7 +223,7 @@ function OrderRow({
         {order.phone}
       </span>
       <span className="w-[52px] text-center text-[14px] font-semibold text-black shrink-0">
-        {order.time}
+        {displayTime}
       </span>
       <span
         className="w-[52px] text-right text-[18px] font-bold shrink-0"
@@ -222,92 +254,18 @@ function OrderDetailDrawer({
   onToggle: (e: React.MouseEvent) => void;
 }) {
   return (
-    <>
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/30 z-10" onClick={onClose} />
-      {/* Drawer */}
-      <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl z-20 shadow-2xl">
-        {/* Handle */}
-        <div className="flex justify-center pt-3 pb-2">
-          <div className="w-10 h-1 rounded-full bg-gray-300" />
-        </div>
-
-        <div className="px-6 pb-10">
-          {/* Header row */}
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <span className="text-[26px] font-bold text-black">
-                訂單 #{order.id}
-              </span>
-              <span className="ml-3 text-base text-gray-500">{order.time}</span>
-            </div>
-            <button
-              onClick={onClose}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600"
-            >
-              <X size={16} />
-            </button>
-          </div>
-
-          {/* Phone */}
-          <div className="flex items-center gap-2 mb-4">
-            <Phone size={15} className="text-gray-400" />
-            <span className="text-[15px] text-gray-700 font-medium">
-              {order.phone}
-            </span>
-          </div>
-
-          {/* Address */}
-          <p className="text-[13px] text-gray-500 mb-5 leading-relaxed">
-            {order.address}
-          </p>
-
-          {/* Items */}
-          <div className="border-t border-gray-100 pt-4 mb-5">
-            <div className="space-y-3">
-              {order.items.map((item, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <span className="text-[15px] text-black font-medium">
-                    {item.name}
-                  </span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-[14px] text-gray-500">
-                      x{item.qty}
-                    </span>
-                    <span className="text-[15px] font-semibold text-black w-16 text-right">
-                      ${item.price * item.qty}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Total */}
-          <div className="border-t border-gray-100 pt-4 flex items-center justify-between mb-6">
-            <span className="text-[17px] font-bold text-black">總計</span>
-            <span
-              className="text-[20px] font-bold"
-              style={{ color: "#289A19" }}
-            >
-              ${order.total}
-            </span>
-          </div>
-
-          {/* Complete button */}
-          <button
-            onClick={onToggle}
-            className={`w-full py-3.5 rounded-xl text-[16px] font-bold transition-colors ${
-              order.completed
-                ? "bg-gray-100 text-gray-600"
-                : "bg-black text-white active:bg-gray-800"
-            }`}
-          >
-            {order.completed ? "取消完成" : "標記完成"}
-          </button>
-        </div>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center px-6"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} // 背景壓黑 50%
+      onClick={onClose} // 點擊背景任何地方關閉卡片
+    >
+      <div
+        className="max-w-md bg-white rounded-2xl overflow-hidden shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <OrderDetailCard order={order} onClose={onClose}></OrderDetailCard>
       </div>
-    </>
+    </div>
   );
 }
 
