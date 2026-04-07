@@ -11,6 +11,8 @@ import DefaultLayout from "./components/layouts/DefaultLayout";
 import Backstage from "./pages/client/Backstage";
 import Menu from "./pages/client/Menu";
 import Cart from "./pages/client/Cart";
+import PaymentForm from "./components/ui/PaymentForm";
+import ProductDetailCard from "./components/ui/ProductDetailCard";
 
 const App: React.FC = () => {
   return (
@@ -21,6 +23,8 @@ const App: React.FC = () => {
           <Route path="/menu" element={<Menu />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/backstage" element={<Backstage />} />
+          <Route path="/pay" element={<PaymentForm />} />
+          <Route path="/product" element={<ProductDetailCard />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -44,7 +44,7 @@ export default function OrderDetailCard({
   onComplete,
 }: OrderDetailCardProps) {
   return (
-    <div className="bg-white w-[345px] overflow-hidden rounded-lg shadow-xl">
+    <div className="flex flex-col w-full bg-white rounded-2xl overflow-hidden shadow-2xl pb-6">
       {/* Title + Close */}
       <div className="relative px-6 pt-5 pb-3">
         <h2 className="text-[28px] font-bold text-black leading-normal">

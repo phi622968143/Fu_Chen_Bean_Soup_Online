@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X, Phone } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import OrderDetailCard from "../../components/ui/OrderDetail";
 
 interface OrderItem {
@@ -255,12 +255,11 @@ function OrderDetailDrawer({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center px-6"
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }} // 背景壓黑 50%
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" // 背景壓黑 50%
       onClick={onClose} // 點擊背景任何地方關閉卡片
     >
       <div
-        className="max-w-md bg-white rounded-2xl overflow-hidden shadow-xl"
+        className="w-full rounded-2xl max-w-[345px] relative"
         onClick={(e) => e.stopPropagation()}
       >
         <OrderDetailCard order={order} onClose={onClose}></OrderDetailCard>
@@ -295,7 +294,8 @@ function CheckedIcon() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect x="5" y="5" width="14" height="14" rx="1" fill="black" />
+      {/* 將原本的 black 改為 green-700 (#15803d) */}
+      <rect x="5" y="5" width="14" height="14" rx="1" fill="#15803D" />
       <path
         d="M8 12L11 15L16 9"
         stroke="white"
