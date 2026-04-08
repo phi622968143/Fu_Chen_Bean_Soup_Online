@@ -4,27 +4,28 @@ const cors = require('cors');
 const app = express(); 
 app.use(cors());
 app.use(express.json());
+
 //front
 app.get('/',(req,res)=>{
-        res.json(menu);
+      res.json(menu);
 }); //ok
 
 let orders = [];
 let nextId = 1;
 
 app.post('/orders', (req, res) => {
-        
-  const { name, phone, items, total, note } = req.body;
+    //total calculate in frontend
+  const { customer_name, phone, items, total, note } = req.body;
 
-  if (!name || !phone || !items || items.length === 0) {
+  if (!customer_name || !phone || !items || items.length === 0) {
     return res.status(400).json({ message: '缺少必要欄位' });
   }
 
   const order = {
     id: nextId++,
-    name,
-    phone,
-    items,        // [{ item_id, name, toppings: [], qty, price }]
+    customer_name:customer_name,
+    phone:phone,
+    items,
     total,
     note: note || '',
     status: 'pending',
@@ -35,13 +36,14 @@ app.post('/orders', (req, res) => {
   res.status(201).json(order);
 });
 
-// //back
+//back
 
 app.get('/back', (req, res) => {
   res.json(orders);
 });
 
 app.delete('/finished_orders/:id',(req, res)=>{
+        
         const id = parseInt(req.params.id);           // 從網址拿 id
         const index = orders.findIndex(o => o.id === id);  // 找到那筆的位置
         if (index === -1) {
