@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { NavigationTabs } from "../../components/ui/navigation/NavigationTabs";
 import ProductDetailCard from "../../components/ui/ProductDetailCard";
 const categories = [
@@ -64,8 +65,51 @@ interface MenuItemType {
   isPartial?: boolean;
 }
 
-export const Menu: React.FC = () => {
+export const MenuItem: React.FC<{
+  item: MenuItemType;
+  onClick: () => void;
+}> = ({ item, onClick }) => {
+  return (
+    <article
+      onClick={onClick}
+      className="flex overflow-hidden gap-3 py-2.5 pr-20 pl-4 mt-1.5 border border-black border-solid"
+    >
+      <div className="flex shrink-0 bg-zinc-300 h-[84px] w-[84px]" />
+      <div className="flex flex-col">
+        <h3 className="text-black">{item.name}</h3>
+        <p className="self-start mt-5 text-green-700">{item.price}</p>
+      </div>
+    </article>
+  );
+};
+
+// Category type
+interface Category {
+  id: string;
+  name: string;
+  toppings: string[];
+  items: { id: string; name: string; price: number }[];
+}
+
+export const MenuWireframe: React.FC = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
   const [selectedItem, setSelectedItem] = useState<MenuItemType | null>(null);
+
+  // fectch data
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/")
+      .then((res) => {
+        const data = res.data.categories || res.data;
+        setCategories(data);
+        setSelectedCategory(data[0] || null); // 預設第一個分類
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
   return (
     <div className="flex overflow-hidden flex-col pb-2.5 mx-auto w-full h-screen bg-white max-w-[480px]">
       <main className="fixed flex flex-col flex-1 overflow-hidden items-start w-full h-screen text-3xl whitespace-nowrap font-[590]">
@@ -80,21 +124,28 @@ export const Menu: React.FC = () => {
             />
           </header>
         </div>
-        <section className="p-4 w-full">
-          <nav className="flex overflow-x-auto w-full flex-nowrap scroll-auto gap-2 items-center p-1 mt-4 mr-0 text-xl leading-none text-center text-black">
-            {categories.map((category, index) => (
-              <div
-                key={index}
-                className={`flex-shrink-0 self-stretch my-auto ${index === 0 ? "w-[120px]" : "w-20"}`}
+
+        {/* 分類導覽列 */}
+        <nav className="flex overflow-x-auto w-full flex-nowrap scroll-auto gap-2 items-center p-1 mt-4 mr-0 text-xl leading-none text-center text-black">
+          {categories.map((cat, index) => (
+            <div
+              key={cat.id}
+              className={`flex-shrink-0 self-stretch my-auto ${index === 0 ? "w-[120px]" : "w-20"}`}
+            >
+              <button
+                className={`text-black ${selectedCategory?.id === cat.id ? "font-bold" : ""}`}
+                onClick={() => setSelectedCategory(cat)}
               >
-                <button className="text-black">{category}</button>
-                <div className="flex mt-1 w-full bg-zinc-300 min-h-1" />
-              </div>
-            ))}
-          </nav>
-        </section>
-        <section className="p-4 w-full flex-1 items-center overflow-y-scroll scroll-auto">
-          {menuItems.map((item, index) => (
+                {cat.name}
+              </button>
+              <div className="flex mt-1 w-full bg-zinc-300 min-h-1" />
+            </div>
+          ))}
+        </nav>
+
+        {/* 商品列表區塊 - 修正滾動問題 */}
+        <section className="flex-1 overflow-y-auto px-4 pb-20">
+          {selectedCategory?.items.map((item, index) => (
             <MenuItem
               key={index}
               item={item}
@@ -122,33 +173,3 @@ export const Menu: React.FC = () => {
     </div>
   );
 };
-
-function MenuItem({
-  item,
-  onClick,
-}: {
-  item: MenuItemType;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="w-full flex overflow-hidden gap-3 py-2.5 pl-4 mt-1.5 border border-black border-solid text-left active:bg-gray-50 transition-colors"
-    >
-      {/* 圖片佔位符 */}
-      <div className="flex shrink-0 bg-zinc-300 h-[84px] w-[84px]" />
-
-      {/* 文字內容區塊 */}
-      <div className="flex flex-col justify-between py-1">
-        <div>
-          <h3 className="text-black text-[20px] font-bold leading-tight">
-            {item.name}
-          </h3>
-        </div>
-        <p className="text-[#289A19] text-[18px] font-bold">{item.price}</p>
-      </div>
-    </button>
-  );
-}
-
-export default Menu;

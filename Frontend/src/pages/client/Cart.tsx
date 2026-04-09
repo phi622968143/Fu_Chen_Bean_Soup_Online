@@ -59,6 +59,7 @@ const initialCartItems: CartItemData[] = [
 
 export const ShoppingCart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemData[]>(initialCartItems);
+  const [isPaymentShow, setIsPaymentShow] = useState<boolean>(false);
 
   const handleToggleSelect = (id: string) => {
     setCartItems((items) =>
@@ -127,13 +128,26 @@ export const ShoppingCart: React.FC = () => {
             <div className="flex justify-end">
               <button
                 className="flex gap-2 items-center px-6 py-3 text-base font-semibold text-white bg-green-500 rounded-lg"
-                onClick={handleCheckout}
+                onClick={() => setIsPaymentShow(true)}
               >
                 <i className="ti ti-shopping-cart text-xl" />
                 去結帳
               </button>
             </div>
           </section>
+          {isPaymentShow && (
+            <div
+              className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" // 背景壓黑 50%
+              onClick={() => setIsPaymentShow(false)} // 點擊背景任何地方關閉卡片
+            >
+              <div
+                className="w-full rounded-2xl max-w-[345px] relative"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <PaymentForm onClose={() => setIsPaymentShow(false)} />
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </>

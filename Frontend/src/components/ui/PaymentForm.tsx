@@ -7,7 +7,7 @@ interface FormFieldProps {
   className?: string;
 }
 
-export function PaymentForm() {
+export function PaymentForm({ onClose }) {
   const handleClose = () => {
     // Handle close action
     console.log("Close button clicked");
@@ -32,7 +32,7 @@ export function PaymentForm() {
             </h1>
             <button
               className="flex justify-center items-center w-6 h-6 bg-gray-300 rounded cursor-pointer border-[nonepx]"
-              onClick={handleClose}
+              onClick={onClose}
               aria-label="關閉"
             >
               <i className="ti ti-x text-base text-gray-500" />
