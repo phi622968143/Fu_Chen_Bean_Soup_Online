@@ -1,19 +1,50 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 
-export const NavigationTabs: React.FC = () => {
+interface Tab {
+  id: string;
+  label: string;
+  active?: boolean;
+}
+
+interface NavigationTabsProps {
+  tabs?: Tab[];
+  onTabChange?: (tabId: string) => void;
+}
+
+export const NavigationTabs: React.FC<NavigationTabsProps> = ({
+  tabs = [
+    { id: "menu", label: "菜單" },
+    { id: "edit-menu", label: "修改菜單" },
+    { id: "order-management", label: "訂單管理", active: true },
+  ],
+  onTabChange,
+}) => {
+  const [activeTab, setActiveTab] = useState(
+    tabs.find((tab) => tab.active)?.id || tabs[0]?.id,
+  );
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+    onTabChange?.(tabId);
+  };
+
   return (
-    <nav className="flex gap-2 text-xl leading-none text-center text-black">
-      <div>
-        <button className="text-black">菜單</button>
-        <div className="flex shrink-0 mt-1 w-9 h-1 bg-zinc-300" />
-      </div>
-      <div>
-        <button className="text-black">修改菜單</button>
-        <div className="flex shrink-0 mt-1 h-1 bg-zinc-300 w-[72px]" />
-      </div>
-      <div>
-        <button className="text-black">訂單管理</button>
-        <div className="flex shrink-0 mt-1 h-1 bg-zinc-300 w-[72px]" />
+    <nav className="px-6 pt-5 pb-4">
+      <div className="flex gap-3 items-center">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => handleTabClick(tab.id)}
+            className={`pb-3 text-base cursor-pointer font-bold ${
+              activeTab === tab.id
+                ? "text-black border-b-2 border-green-700"
+                : "text-neutral-400"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
     </nav>
   );

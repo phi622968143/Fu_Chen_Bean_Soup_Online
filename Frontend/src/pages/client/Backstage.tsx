@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import OrderDetailCard from "../../components/ui/OrderDetail";
+import { NavigationTabs } from "../../components/ui/navigation/NavigationTabs";
 
 interface OrderItem {
   name: string;
@@ -120,63 +121,82 @@ export default function Backstage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-lg mx-auto min-h-screen flex flex-col relative">
-        {/* Header */}
-        <div className="px-6 pt-10 pb-2">
-          <h1 className="text-[32px] font-bold text-black leading-tight">
-            所有訂單
-          </h1>
-        </div>
+      <div className="max-w-lg mx-auto min-h-screen flex flex-col">
+        <div className="items-center px-6">
+          <div className="items-start w-full">
+            <NavigationTabs />
+          </div>
 
-        {/* Date Navigation */}
-        <div className="px-5 pt-4 pb-1 flex items-center gap-1.5">
-          <button
-            onClick={goToPrevDay}
-            className="text-black hover:opacity-50 transition-opacity"
-            aria-label="Previous day"
-          >
-            <ChevronLeft size={20} strokeWidth={2.5} />
-          </button>
-          <span className="text-[22px] font-bold text-black">{dateStr}</span>
-          <button
-            onClick={goToNextDay}
-            className="text-black hover:opacity-50 transition-opacity"
-            aria-label="Next day"
-          >
-            <ChevronRight size={20} strokeWidth={2.5} />
-          </button>
-        </div>
+          <div className="flex w-full bg-neutral-400 min-h-px" />
+          <div className="items-start w-full">
+            {/* Header */}
+            <div className="pt-2 pb-2">
+              <h1 className="text-[32px] font-bold text-black leading-tight">
+                所有訂單
+              </h1>
+            </div>
 
-        {/* Order Count */}
-        <div className="px-4 pt-4 pb-1">
-          <span className="text-[19px] font-bold text-black">
-            訂單({orders.length + 199})
-          </span>
+            {/* Date Navigation */}
+            <div className="pt-4 pb-2 flex items-center gap-1.5">
+              <button
+                onClick={goToPrevDay}
+                className="text-black hover:opacity-50 transition-opacity cursor-pointer"
+                aria-label="Previous day"
+              >
+                <ChevronLeft size={20} strokeWidth={2.5} />
+              </button>
+              <span className="text-[22px] font-bold text-black">
+                {dateStr}
+              </span>
+              <button
+                onClick={goToNextDay}
+                className="text-black hover:opacity-50 transition-opacity cursor-pointer"
+                aria-label="Next day"
+              >
+                <ChevronRight size={20} strokeWidth={2.5} />
+              </button>
+            </div>
+
+            {/* Order Count */}
+            <div className="pt-4 pb-6">
+              <span className="text-[19px] font-bold text-black">
+                訂單({orders.length})
+              </span>
+            </div>
+
+            <div className="flex w-full justify-center bg-neutral-400 min-h-px" />
+
+            <div className="items-start w-full">
+              {/* Column Headers */}
+              <div className="flex items-center flex-row border-b border-neutral-200">
+                <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
+                  編號
+                </span>
+                <div className="flex h-9 bg-neutral-400 min-w-px" />
+                <span className="w-[113px] text-center text-[18px] font-bold text-black shrink-0">
+                  電話
+                </span>
+                <div className="flex h-9 bg-neutral-400 min-w-px" />
+                <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
+                  時間
+                </span>
+                <div className="flex h-9 bg-neutral-400 min-w-px" />
+                <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
+                  總價
+                </span>
+                <div className="flex h-9 bg-neutral-400 min-w-px" />
+                <span className="w-[44px] text-center text-[18px] font-bold text-black shrink-0">
+                  完成
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Table */}
-        <div className="flex-1 px-4 mt-1">
-          {/* Column Headers */}
-          <div className="flex items-center py-2.5">
-            <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
-              編號
-            </span>
-            <span className="flex-1 text-center text-[18px] font-bold text-black">
-              電話
-            </span>
-            <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
-              時間
-            </span>
-            <span className="w-[52px] text-right text-[18px] font-bold text-black shrink-0">
-              總價
-            </span>
-            <span className="w-[44px] text-center text-[18px] font-bold text-black shrink-0">
-              完成
-            </span>
-          </div>
-
+        <div className="items-center px-6">
           {/* Order Rows */}
-          <div>
+          <div className="flex-1 m-1">
             {orders.map((order) => (
               <OrderRow
                 key={order.id}
@@ -212,35 +232,44 @@ function OrderRow({
 }) {
   const displayTime = order.datetime.slice(11);
   return (
-    <button
+    <div
       onClick={onClick}
-      className="w-full flex items-center py-3 text-left active:bg-gray-50 transition-colors rounded-lg -mx-1 px-1"
+      className="flex items-center flex-row border-b border-neutral-200 w-full hover:bg-gray-50 transition-colors"
     >
-      <span className="w-[52px] text-center text-[18px] font-bold text-black shrink-0">
-        {order.id}
-      </span>
-      <span className="flex-1 text-center text-[14px] font-semibold text-black">
-        {order.phone}
-      </span>
-      <span className="w-[52px] text-center text-[14px] font-semibold text-black shrink-0">
-        {displayTime}
-      </span>
-      <span
-        className="w-[52px] text-right text-[18px] font-bold shrink-0"
-        style={{ color: "#289A19" }}
-      >
-        ${order.total}
-      </span>
-      <div className="w-[44px] flex justify-center shrink-0">
-        <span
-          role="button"
-          onClick={onToggle}
-          className="w-6 h-6 flex items-center justify-center"
+      {/* 1. ID 欄位 */}
+      <div className="flex flex-col items-center justify-center px-2 py-3 w-[52px] shrink-0">
+        <span className="text-center w-full font-bold">{order.id}</span>
+      </div>
+
+      {/* 2. 電話欄位 */}
+      <div className="flex flex-col items-center justify-center px-2.5 py-3 w-[113px] shrink-0 text-xs">
+        <span className="text-center w-full font-bold">{order.phone}</span>
+      </div>
+
+      {/* 3. 時間欄位 */}
+      <div className="flex flex-col items-center justify-center px-2.5 py-3 w-[52px] shrink-0">
+        <span className="text-center w-full font-bold">{displayTime}</span>
+      </div>
+
+      {/* 4. 金額欄位 */}
+      <div className="flex flex-col items-center justify-center px-3.5 py-3 w-[52px] shrink-0 text-base font-bold text-[#289A19]">
+        <span className="text-center w-full font-bold">${order.total}</span>
+      </div>
+
+      {/* 5. 勾選按鈕 */}
+      <div className="flex items-center justify-center px-1.5 py-3 w-[44px] shrink-0">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation(); // 防止觸發整列點擊
+            onToggle(e);
+          }}
+          className="w-5 h-5 flex items-center justify-center"
         >
           {order.completed ? <CheckedIcon /> : <UncheckedIcon />}
-        </span>
+        </button>
       </div>
-    </button>
+    </div>
   );
 }
 
