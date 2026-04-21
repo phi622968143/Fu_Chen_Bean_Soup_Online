@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import OrderDetailCard from "../../components/ui/OrderDetail";
+import styled from "styled-components";
 import { NavigationTabs } from "../../components/ui/navigation/NavigationTabs";
 
 interface OrderItem {

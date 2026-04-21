@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import styled from "styled-components";
 import { NavigationTabs } from "../../components/ui/navigation/NavigationTabs";
 import ProductDetailCard from "../../components/ui/ProductDetailCard";
 const categories = [
-  "綠豆薏仁系列",
-  "豆花系列",
-  "冷飲系列",
-  "冰品系列",
-  "熱飲系列",
-  "杏仁系列",
-  "瓶裝系列",
+  { name: "綠豆薏仁系列", active: true },
+  { name: "豆花系列", active: false },
+  { name: "冷飲系列", active: false },
+  { name: "冰品系列", active: false },
+  { name: "熱飲系列", active: false },
+  { name: "杏仁系列", active: false },
+  { name: "瓶裝系列", active: false },
 ];
 
 const menuItems = [
@@ -70,16 +71,13 @@ export const MenuItem: React.FC<{
   onClick: () => void;
 }> = ({ item, onClick }) => {
   return (
-    <article
-      onClick={onClick}
-      className="flex overflow-hidden gap-3 py-2.5 pr-20 pl-4 mt-1.5 border border-black border-solid"
-    >
-      <div className="flex shrink-0 bg-zinc-300 h-[84px] w-[84px]" />
-      <div className="flex flex-col">
-        <h3 className="text-black">{item.name}</h3>
-        <p className="self-start mt-5 text-green-700">{item.price}</p>
-      </div>
-    </article>
+    <MenuItemContainer onClick={onClick}>
+      {/* <MenuItemImage src={image} alt={name} /> */}
+      <MenuItemContent>
+        <MenuItemName>{item.name}</MenuItemName>
+        {item.price && <MenuItemPrice>{item.price}</MenuItemPrice>}
+      </MenuItemContent>
+    </MenuItemContainer>
   );
 };
 
@@ -89,6 +87,7 @@ interface Category {
   name: string;
   toppings: string[];
   items: { id: string; name: string; price: number }[];
+  active: boolean;
 }
 
 export const MenuWireframe: React.FC = () => {
@@ -111,49 +110,41 @@ export const MenuWireframe: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex overflow-hidden flex-col pb-2.5 mx-auto w-full h-screen bg-white max-w-[480px]">
-      <main className="fixed flex flex-col flex-1 overflow-hidden items-start w-full h-screen text-3xl whitespace-nowrap font-[590]">
-        <div className="pl-4 w-full mt-5">
-          <NavigationTabs />
-          <header className="flex gap-10 mt-5 text-3xl leading-none text-center text-black">
-            <h1>菜單</h1>
-            <img
-              src="https://api.builder.io/api/v1/image/assets/7e9b7b369aa744bdae5e98cb8bfd4ec9/3f7bd44c6a425393d53672dda05da8b961c1f90b?placeholderIfAbsent=true"
-              alt="Menu icon"
-              className="object-contain shrink-0 w-6 aspect-square"
-            />
-          </header>
-        </div>
-
-        {/* 分類導覽列 */}
-        <nav className="flex overflow-x-auto w-full flex-nowrap scroll-auto gap-2 items-center p-1 mt-4 mr-0 text-xl leading-none text-center text-black">
-          {categories.map((cat, index) => (
-            <div
-              key={cat.id}
-              className={`flex-shrink-0 self-stretch my-auto ${index === 0 ? "w-[120px]" : "w-20"}`}
-            >
-              <button
-                className={`text-black ${selectedCategory?.id === cat.id ? "font-bold" : ""}`}
-                onClick={() => setSelectedCategory(cat)}
-              >
-                {cat.name}
-              </button>
-              <div className="flex mt-1 w-full bg-zinc-300 min-h-1" />
-            </div>
-          ))}
-        </nav>
-
-        {/* 商品列表區塊 - 修正滾動問題 */}
-        <section className="flex-1 overflow-y-auto px-4 pb-20">
-          {selectedCategory?.items.map((item, index) => (
-            <MenuItem
-              key={index}
-              item={item}
-              onClick={() => setSelectedItem(item)}
-            />
-          ))}
-        </section>
-      </main>
+    <MenuContainer>
+      <MainContent>
+        <NavigationTabs />
+        <MenuHeader>
+          <MenuTitle>菜單</MenuTitle>
+          <MenuIcon src="https://api.builder.io/api/v1/image/assets/7e9b7b369aa744bdae5e98cb8bfd4ec9/9c76d559a1ea8d6c85232ca15ff5dfca0177f00a?placeholderIfAbsent=true" />
+        </MenuHeader>
+        <CategoryContainer>
+          <CategoryScrollWrapper>
+            {categories.map((category, index) => {
+              const isSelected = selectedCategory?.id === category.id;
+              return (
+                <CategoryButton
+                  key={index}
+                  className={isSelected ? "active" : ""}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  <CategoryText>{category.name}</CategoryText>
+                  {isSelected && <ActiveIndicator />}
+                </CategoryButton>
+              );
+            })}
+          </CategoryScrollWrapper>
+        </CategoryContainer>
+      </MainContent>
+      <MenuListContainer>
+        {selectedCategory?.items.map((item, index) => (
+          <MenuItem
+            key={index}
+            // image={item.image} //預留圖片空間
+            item={item as any} // 強制轉型或確保 item 符合 MenuItemType
+            onClick={() => setSelectedItem(item as any)}
+          />
+        ))}
+      </MenuListContainer>
       {selectedItem && (
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" // 背景壓黑 50%
@@ -170,6 +161,226 @@ export const MenuWireframe: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </MenuContainer>
   );
 };
+
+const MenuContainer = styled.main`
+  background-color: rgba(255, 255, 255, 1);
+  display: flex;
+  max-width: 480px;
+  width: 100%;
+  padding-bottom: 9px;
+  flex-direction: column;
+  overflow: hidden;
+  align-items: stretch;
+  margin: 0 auto;
+`;
+
+const MainContent = styled.div`
+  align-self: center;
+  display: flex;
+  margin-top: 8px;
+  width: 100%;
+  max-width: 361px;
+  flex-direction: column;
+  align-items: stretch;
+  color: var(--text-gray-AAA, #949494);
+  white-space: nowrap;
+  text-align: center;
+  justify-content: start;
+  font:
+    590 20px/1.1 SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+`;
+
+const MenuHeader = styled.header`
+  display: flex;
+  margin-top: 15px;
+  width: 100%;
+  align-items: stretch;
+  gap: 20px;
+  font-size: 32px;
+  color: rgba(0, 0, 0, 1);
+  line-height: 1;
+  justify-content: space-between;
+`;
+
+const MenuTitle = styled.h1`
+  margin: 0;
+  font: inherit;
+`;
+
+const MenuIcon = styled.img`
+  aspect-ratio: 1;
+  object-fit: contain;
+  object-position: center;
+  width: 24px;
+  flex-shrink: 0;
+`;
+
+const CategoryContainer = styled.div`
+  display: flex;
+  margin-top: 15px;
+  width: 100%;
+  overflow: hidden;
+`;
+
+const CategoryScrollWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  gap: 8px;
+  overflow: scroll;
+  justify-content: start;
+  padding: 4px;
+  overflow-x: auto;
+  white-space: nowrap;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+const CategoryButton = styled.button`
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-gray-AAA, #949494);
+  font:
+    590 20px/1.1 SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  white-space: nowrap;
+  text-align: center;
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  // gap: 10px;
+  justify-content: start;
+
+  &.active {
+    color: var(--text-gray-AAAA, #343434);
+    flex-direction: column;
+  }
+`;
+
+const CategoryText = styled.span`
+  // width: 80px;
+
+  .active & {
+    color: var(--text-gray-AAAA, #343434);
+    width: auto;
+  }
+`;
+
+const ActiveIndicator = styled.div`
+  display: flex;
+  height: 4px;
+  margin-top: 4px;
+  width: 100%;
+  background-color: var(--bg-primary, #289a19);
+  border-radius: 2px;
+`;
+
+const MenuListContainer = styled.section`
+  z-index: 10;
+  margin-top: 6px;
+  height: 499px;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 8px 16px 0;
+  font:
+    590 28px SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+`;
+const MenuItemContainer = styled.article`
+  border-radius: 12px;
+  box-shadow:
+    2px 1px 4px 0 rgba(0, 0, 0, 0.25) inset,
+    -3px -3px 4px 0 rgba(0, 0, 0, 0.25) inset,
+    4px 4px 4px 0 rgba(0, 0, 0, 0.25);
+  display: flex;
+  max-width: 100%;
+  width: 361px;
+  align-items: stretch;
+  gap: 12px;
+  overflow: hidden;
+  background-color: var(--white-mid, #f7f7f7);
+  padding: 8px 72px 8px 16px;
+  margin-top: 8px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &.compact {
+    color: rgba(52, 52, 52, 1);
+    padding: 8px 16px 0;
+  }
+`;
+
+// const MenuItemImage = styled.img`
+//   aspect-ratio: 1;
+//   object-fit: contain;
+//   object-position: center;
+//   width: 84px;
+//   flex-shrink: 0;
+
+//   .compact & {
+//     aspect-ratio: 1.65;
+//   }
+// `;
+
+const MenuItemContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const MenuItemName = styled.h3`
+  color: rgba(52, 52, 52, 1);
+  font:
+    590 28px SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  margin: 0;
+`;
+
+const MenuItemPrice = styled.span`
+  color: rgba(40, 154, 25, 1);
+  align-self: start;
+  margin-top: 18px;
+  font:
+    590 28px SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+`;
+
+const MenuItemNameCompact = styled.h3`
+  align-self: start;
+  flex-grow: 1;
+  flex-shrink: 1;
+  width: 216px;
+  color: rgba(52, 52, 52, 1);
+  font:
+    590 28px SF Pro,
+    -apple-system,
+    Roboto,
+    Helvetica,
+    sans-serif;
+  margin: 0;
+`;
